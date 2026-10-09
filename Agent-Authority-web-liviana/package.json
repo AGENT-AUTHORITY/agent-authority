@@ -1,0 +1,1 @@
+{"name":"agent-authority","private":true,"version":"2.0.0","type":"module","scripts":{"dev":"vite","build":"vite build"},"devDependencies":{"vite":"^7.1.0"},"dependencies":{"@fontsource/anton":"^5.2.0","@fontsource/inter":"^5.2.0","@phosphor-icons/web":"^2.1.2"}}
