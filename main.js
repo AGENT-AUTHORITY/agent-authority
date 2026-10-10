@@ -29,8 +29,8 @@ document.querySelectorAll('[data-profile]').forEach(link => link.addEventListene
 }));
 
 const demos = {
-  coach: { mark: 'MR', name: 'MARCOS RIVERA', role: 'ENTRENADOR DE FÚTBOL', slogan: 'Experiencia. Metodología.\nUna visión de juego.', image: 'assets/coach-hero.webp', alt: 'Vista conceptual de la web de un entrenador', href: 'demo-coach.html', features: ['Recorrido profesional', 'Modelo de trabajo', 'Contacto visible'] },
-  agency: { mark: 'NORTH', name: 'NORTH FOOTBALL', role: 'AGENCIA DE REPRESENTACIÓN', slogan: 'Talento. Visión.\nUna carrera con dirección.', image: 'assets/card-agente.webp', alt: 'Vista conceptual de una agencia de representación', href: 'demo-agency.html', features: ['Propuesta y servicios', 'Fichas de representados', 'Contacto visible'] },
+  coach: { mark: 'MR', name: 'MARCOS RIVERA', role: 'PORTFOLIO DE DIRECTOR TÉCNICO', slogan: 'Clubes, temporadas y palmarés.\nUna pizarra para explorar su idea de juego.', image: 'assets/demos/preview-coach.jpg', alt: 'Vista de la demo de Marcos Rivera, de estética editorial clara', href: 'demo-coach.html', features: ['Escudos y trayectoria', 'Trofeos y palmarés', 'Pizarra interactiva'] },
+  agency: { mark: 'N', name: 'NORTH FOOTBALL', role: 'AGENCIA DE REPRESENTACIÓN', slogan: 'Un plantel visual y fichas individuales.\nUna identidad pensada para el talento.', image: 'assets/demos/preview-agency.jpg', alt: 'Vista de la demo North Football, con retratos de jugadores y diseño violeta', href: 'demo-agency.html', features: ['Fotos de jugadores', 'Filtros por posición', 'Fichas individuales'] },
 };
 const tabs = [...document.querySelectorAll('[data-demo]')];
 function selectDemo(tab) {
