@@ -1,3 +1,5 @@
+import { players } from './football-data.js';
+import { mountAnalysis } from './football-ui.js';
 const tacticalPhases = {
   possession: {
     formation:'4 — 3 — 3', phase:'FASE OFENSIVA', title:'Amplitud para encontrar espacios.',
@@ -43,21 +45,6 @@ filterButtons.forEach(button => button.addEventListener('click', () => {
   document.querySelector('#roster-count').textContent = count + (count === 1 ? ' perfil ilustrativo' : ' perfiles ilustrativos');
 }));
 
-// These are illustrative identities, not records belonging to real players.
-const players = {
-  mateo: { name:'Mateo Silva', image:'assets/demos/player-mateo.webp', number:'09', role:'Delantero centro',
-    data:[['País','Argentina'],['Edad','24 años'],['Altura','1,84 m'],['Pierna hábil','Derecha'],['Club de ejemplo','Puerto Sur FC'],['Posición','Delantero centro']],
-    strengths:'Movilidad entre centrales, apoyos de espaldas y ataque al espacio. Un perfil orientado a la finalización y a conectar el último tercio.',
-    career:[['2023 — 2026','Puerto Sur FC'],['2020 — 2023','Unión Sierra']], },
-  lucas: { name:'Lucas Costa', image:'assets/demos/player-lucas.webp', number:'08', role:'Mediocampista central',
-    data:[['País','Argentina'],['Edad','27 años'],['Altura','1,78 m'],['Pierna hábil','Izquierda'],['Club de ejemplo','Atlético Delta'],['Posición','Volante central']],
-    strengths:'Lectura del juego, circulación de la pelota y conexión entre líneas. Un mediocampista que ofrece apoyos y continuidad a la posesión.',
-    career:[['2022 — 2026','Atlético Delta'],['2018 — 2022','Puerto Sur FC']], },
-  nicolas: { name:'Nicolás Duarte', image:'assets/demos/player-nicolas.webp', number:'04', role:'Defensor central',
-    data:[['País','Uruguay'],['Edad','23 años'],['Altura','1,89 m'],['Pierna hábil','Derecha'],['Club de ejemplo','Unión Sierra'],['Posición','Defensor central']],
-    strengths:'Anticipación, juego aéreo y primer pase. Un defensor que combina presencia en el área con una salida simple y orientada.',
-    career:[['2024 — 2026','Unión Sierra'],['2021 — 2024','Atlético Delta']], },
-};
 const dialog = document.querySelector('#player-dialog');
 let lastPlayerButton;
 document.querySelectorAll('[data-player]').forEach(button => button.addEventListener('click', () => {
@@ -83,6 +70,7 @@ document.querySelectorAll('[data-player]').forEach(button => button.addEventList
     const name = document.createElement('strong'); name.textContent = club;
     row.append(date, name); return row;
   }));
+  mountAnalysis(document.querySelector('#dialog-analysis'), button.dataset.player, 'dialog');
   dialog.showModal();
   dialog.scrollTop = 0;
 }));
