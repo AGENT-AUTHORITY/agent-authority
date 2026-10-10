@@ -2,13 +2,12 @@ const CONSENT_KEY = 'aa_analytics_consent_v1';
 const SOURCE_KEY = 'aa_visit_source_v1';
 const CONSENT_TTL = 180 * 24 * 60 * 60 * 1000;
 const SESSION_TTL = 30 * 60 * 1000;
-const EVENTS = new Set(['page_view', 'offer_view', 'demo_view', 'demo_click', 'demo_select', 'form_start', 'proposal_ready', 'whatsapp_click', 'faq_open', 'service_select']);
-const PAGES = new Set(['home', 'demo_agency', 'demo_coach', 'demo_player', 'players_offer', 'privacy', 'agents']);
+const EVENTS = new Set(['page_view', 'offer_view', 'demo_view', 'demo_click', 'demo_select', 'form_start', 'proposal_ready', 'whatsapp_click', 'faq_open']);
+const PAGES = new Set(['home', 'demo_agency', 'demo_coach', 'privacy', 'agents']);
 const SOURCES = new Set(['linkedin', 'instagram', 'google', 'email', 'referral', 'direct']);
 const MEDIA = new Set(['social', 'organic_social', 'dm', 'referral', 'email', 'paid_social', 'organic', 'none']);
-const POSITIONS = new Set(['showcase', 'oscar', 'contact', 'mobile', 'proposal', 'demo', 'players', 'socials', 'other']);
-const FAQS = new Set(['socials', 'materials', 'timeline', 'ownership', 'existing_site', 'results', 'player_materials', 'player_analysis', 'player_results']);
-const OFFERS = new Set(['professional', 'player', 'social_setup', 'social_management', 'combined']);
+const POSITIONS = new Set(['showcase', 'oscar', 'contact', 'mobile', 'proposal', 'demo', 'other']);
+const FAQS = new Set(['socials', 'materials', 'timeline', 'ownership', 'existing_site', 'results']);
 const safeRead = (storage, key) => { try { return JSON.parse(storage.getItem(key)); } catch { return null; } };
 const safeWrite = (storage, key, value) => { try { storage.setItem(key, JSON.stringify(value)); } catch { /* The site still works without storage. */ } };
 
@@ -41,8 +40,7 @@ export function sanitizeEvent(name, params = {}) {
   const safe = {};
   if (PAGES.has(params.page_type)) safe.page_type = params.page_type;
   if (POSITIONS.has(params.cta_position)) safe.cta_position = params.cta_position;
-  if (['agency', 'coach', 'player'].includes(params.demo_type)) safe.demo_type = params.demo_type;
-  if (OFFERS.has(params.offer_type)) safe.offer_type = params.offer_type;
+  if (['agency', 'coach'].includes(params.demo_type)) safe.demo_type = params.demo_type;
   if (FAQS.has(params.faq_id)) safe.faq_id = params.faq_id;
   return safe;
 }
@@ -60,7 +58,7 @@ export function createAnalytics(win, doc, config) {
   const id = mode === 'gtm' ? config.tagManagerId : config.measurementId;
   const validId = mode === 'gtm' ? /^GTM-[A-Z0-9]+$/.test(id) : mode === 'gtag' && /^G-[A-Z0-9]{6,}$/.test(id);
   const configured = validId && config.productionHosts.includes(win.location.hostname);
-  const path = ['/', '/index.html', '/demo-agency.html', '/demo-coach.html', '/demo-player.html', '/jugadores.html', '/privacidad.html', '/agentes.html'].includes(win.location.pathname) ? win.location.pathname : '/';
+  const path = ['/', '/index.html', '/demo-agency.html', '/demo-coach.html', '/privacidad.html', '/agentes.html'].includes(win.location.pathname) ? win.location.pathname : '/';
   const safePage = new URL(win.location.origin + path);
   if (attribution.source !== 'direct') {
     safePage.searchParams.set('utm_source', attribution.source);
@@ -79,7 +77,7 @@ export function createAnalytics(win, doc, config) {
     const safe = sanitizeEvent(name, { page_type: pageType, ...params });
     if (!configured || !granted || !started || !safe) return false;
     const payload = { ...safe, ...sourceParams, page_location: safePage.href, page_referrer: safeReferrer };
-    if (mode === 'gtm') layer().push({ event: name, cta_position: null, demo_type: null, faq_id: null, offer_type: null, ...payload });
+    if (mode === 'gtm') layer().push({ event: name, cta_position: null, demo_type: null, faq_id: null, ...payload });
     else command('event', name, { ...payload, send_to: id });
     return true;
   }
@@ -104,7 +102,7 @@ export function createAnalytics(win, doc, config) {
     }
     doc.head.append(script);
     track('page_view');
-    if (['demo_agency', 'demo_coach', 'demo_player'].includes(pageType)) track('demo_view', { demo_type: pageType.replace('demo_',''), cta_position: 'demo' });
+    if (pageType === 'demo_agency' || pageType === 'demo_coach') track('demo_view', { demo_type: pageType === 'demo_agency' ? 'agency' : 'coach', cta_position: 'demo' });
   }
   function choose(accepted) {
     try { safeWrite(win.localStorage, CONSENT_KEY, { accepted, timestamp: Date.now() }); } catch { /* Keep the in-memory choice. */ }
