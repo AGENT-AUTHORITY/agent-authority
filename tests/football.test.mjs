@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
-import { players, attributeLabels } from '../football-data.js';
+import { players, attributeLabels, goalkeeperAttributeLabels, getAttributeLabels } from '../football-data.js';
 import { createHeatmapSvg, createRadarSvg, analysisMarkup } from '../football-visuals.js';
 import { buildProposalMessage } from '../proposal.js';
 import { sanitizeEvent, readAttribution } from '../analytics.js';
 import { analyticsConfig } from '../analytics-config.js';
 
 for (const [key,player] of Object.entries(players)) {
-  assert.equal(player.attributes.length, attributeLabels.length);
+  assert.equal(player.attributes.length, getAttributeLabels(player).length);
   assert.ok(player.attributes.every(value => Number.isFinite(value) && value>=0 && value<=99));
   for (const phase of ['all','ball','off']) {
     const svg = createHeatmapSvg(player,phase,key+'-'+phase);
@@ -18,6 +18,19 @@ for (const [key,player] of Object.entries(players)) {
   assert.notEqual(createHeatmapSvg(player,'all','same'),createHeatmapSvg(player,'ball','same'));
   assert.ok(createRadarSvg(player,key).includes('Valores ficticios'));
 }
+const keeperRadar = createRadarSvg(players.anibal,'keeper');
+const keeperAnalysis = analysisMarkup(players.anibal,'keeper');
+for (const label of goalkeeperAttributeLabels) {
+  assert.ok(keeperRadar.includes(label),'Goalkeepers need their own radar labels');
+  assert.ok(keeperAnalysis.includes('<span>'+label+'</span>'),'The attribute list must match the radar');
+}
+for (const label of attributeLabels) assert.ok(!keeperRadar.includes(label+':'),'Outfield attributes must not leak into a goalkeeper radar');
+assert.ok(keeperAnalysis.includes('Atributos de arquero'));
+assert.ok(createHeatmapSvg(players.anibal).includes('ARCO PROPIO'));
+assert.ok(players.anibal.zones.all.every(([x]) => x<30),'Keeper actions should be concentrated near the own goal');
+assert.ok(createRadarSvg(players.mateo).includes('Remate: 88'),'Switching back must retain outfield attributes');
+assert.notEqual(createRadarSvg(players.mateo,'same'),createRadarSvg(players.anibal,'same'));
+assert.notEqual(createHeatmapSvg(players.mateo,'all','same'),createHeatmapSvg(players.anibal,'all','same'));
 const combined = analysisMarkup(players.mateo,'lab') + analysisMarkup(players.mateo,'dialog');
 const ids = [...combined.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
 assert.equal(new Set(ids).size,ids.length,'SVG definitions must not collide across the lab and dialog');
@@ -37,4 +50,4 @@ assert.deepEqual(sanitizeEvent('demo_view',{demo_type:'player',page_type:'demo_p
 const attribution = readAttribution({href:'https://agentauthority.lat/jugadores.html?utm_source=instagram&utm_medium=dm&utm_campaign=jugadores&utm_content=demo_jugador',hostname:'agentauthority.lat'},'',null,analyticsConfig);
 assert.equal(attribution.campaign,'jugadores');
 assert.equal(attribution.content,'demo_jugador');
-console.log('PASS player graphics, distinct map phases, SVG IDs, escaping, service proposals and safe offer attribution');
+console.log('PASS player and goalkeeper attributes, own-goal maps, distinct phases, SVG IDs, escaping, proposals and safe attribution');

@@ -43,3 +43,9 @@ El formulario distingue el servicio y ajusta los presupuestos posibles. No proce
 Hero y fotografía de entrenamiento: generados para este proyecto. Imagen de agente: reutilizada del repositorio y optimizada en WebP. Tipografías Anton e Inter: Fontsource. Iconos: Phosphor Icons. Licencias de tipografías en `assets/fonts/`.
 
 Retratos de las demos: personas ficticias generadas para este proyecto y codificadas en WebP. Escudos: SVG originales de clubes ficticios. No se usan jugadores reales ni marcas de clubes reales como prueba de experiencia.
+
+## Arqueros
+
+La demo de agencia incluye el filtro Arqueros y la ficha ficticia de Aníbal “Perfumo” Gonzales. La demo de portfolio permite alternar entre delantero y arquero: cambia identidad, foto, tarjeta, recorrido, videos por rol y análisis. Los arqueros usan reflejos, manejo, juego aéreo, distribución, uno contra uno y posicionamiento; su mapa se concentra cerca del arco propio. Todas las valoraciones y zonas son simulaciones.
+
+El retrato nuevo está en `assets/demos/player-julian.webp`, generado y revisado con imagegen. Prompt final: arquero ficticio con un aire a la presencia y expresión confiada del Dibu Martínez, sin reproducir su identidad; rasgos propios, pelo corto, barba incipiente, piel natural y una media sonrisa. Conservar camiseta verde y guantes, arco de entrenamiento desenfocado y luz de día nublado. Sin marcas ni textos. Sigue identificado como Aníbal “Perfumo” Gonzales, personaje de ejemplo.
